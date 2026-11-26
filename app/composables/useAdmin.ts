@@ -1,5 +1,5 @@
 import type { PhaseId } from '../../shared/phases'
-import type { AdminPlayer, GameSetup } from '../../shared/types'
+import type { AdminPlayer, GameProgress, GameSetup } from '../../shared/types'
 
 interface FetchFailure {
   statusCode?: number
@@ -58,5 +58,53 @@ export function useAdmin() {
     }
   })
 
-  return { setup, needsLogin, loading, loadError, load, login, addPlayer, removePlayer, savePhases }
+  async function reloadAfterConflict(failure: unknown) {
+    if ((failure as FetchFailure).statusCode === 409) {
+      await $fetch<GameSetup>('/api/game/setup').then(
+        (fresh) => {
+          setup.value = fresh
+        },
+        () => undefined,
+      )
+    }
+  }
+
+  function takeProgress(progress: GameProgress) {
+    if (setup.value) {
+      setup.value.steps = progress.steps
+      setup.value.currentIndex = progress.currentIndex
+    }
+  }
+
+  const startGame = useAction(async () => {
+    try {
+      takeProgress(await $fetch<GameProgress>('/api/game/start', { method: 'POST' }))
+    } catch (failure) {
+      await reloadAfterConflict(failure)
+      throw failure
+    }
+  })
+
+  const advance = useAction(async (from: number) => {
+    try {
+      takeProgress(await $fetch<GameProgress>('/api/game/advance', { method: 'POST', body: { from } }))
+    } catch (failure) {
+      await reloadAfterConflict(failure)
+      throw failure
+    }
+  })
+
+  return {
+    setup,
+    needsLogin,
+    loading,
+    loadError,
+    load,
+    login,
+    addPlayer,
+    removePlayer,
+    savePhases,
+    startGame,
+    advance,
+  }
 }

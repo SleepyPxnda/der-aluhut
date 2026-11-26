@@ -10,6 +10,7 @@ const props = defineProps<{
   catalog: PhaseInfo[]
   pending: boolean
   error: string | null
+  locked: boolean
 }>()
 const emit = defineEmits<{ save: [phaseOrder: PhaseId[]] }>()
 
@@ -66,7 +67,7 @@ watch(
     <ol class="phases">
       <li v-for="(item, index) in items" :key="item.id" class="phase" :class="{ off: !item.active }">
         <label class="switch">
-          <input type="checkbox" :checked="item.active" :aria-label="`${item.label} aktiv`" @change="toggle(item)">
+          <input type="checkbox" :checked="item.active" :disabled="locked" :aria-label="`${item.label} aktiv`" @change="toggle(item)">
           <span class="track" aria-hidden="true"><span class="knob" /></span>
         </label>
         <span class="phase-label">
@@ -75,12 +76,12 @@ watch(
           <span v-if="item.active && item.id === lastActive" class="mark end">Ende</span>
         </span>
         <span class="moves">
-          <button class="icon" type="button" aria-label="Nach oben" :disabled="index === 0" @click="move(index, -1)">↑</button>
+          <button class="icon" type="button" aria-label="Nach oben" :disabled="locked || index === 0" @click="move(index, -1)">↑</button>
           <button
             class="icon"
             type="button"
             aria-label="Nach unten"
-            :disabled="index === items.length - 1"
+            :disabled="locked || index === items.length - 1"
             @click="move(index, 1)"
           >↓</button>
         </span>
@@ -89,7 +90,7 @@ watch(
     <p v-if="nothingActive" class="hint">Wähl mindestens eine Phase aus.</p>
     <p v-if="error" class="err" role="alert">{{ error }}</p>
     <p v-if="saved && !error" class="ok-message" role="status">Gespeichert.</p>
-    <button class="btn wide" type="button" :disabled="nothingActive || pending" @click="save">
+    <button class="btn wide" type="button" :disabled="locked || nothingActive || pending" @click="save">
       {{ pending ? 'Speichert …' : 'Speichern' }}
     </button>
   </section>

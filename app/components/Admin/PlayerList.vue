@@ -7,6 +7,7 @@ const props = defineProps<{
   addError: string | null
   removing: boolean
   removeError: string | null
+  locked: boolean
 }>()
 const emit = defineEmits<{ add: [name: string]; remove: [id: string] }>()
 
@@ -85,10 +86,11 @@ function confirmRemoval() {
           v-model="name"
           type="text"
           autocomplete="off"
+          :disabled="locked"
           :class="{ invalid: addError }"
           :aria-invalid="addError ? 'true' : undefined"
         >
-        <button class="btn" type="submit" :disabled="adding">Hinzufügen</button>
+        <button class="btn" type="submit" :disabled="adding || locked">Hinzufügen</button>
       </div>
       <p v-if="addError" class="err" role="alert">{{ addError }}</p>
     </form>
@@ -108,7 +110,7 @@ function confirmRemoval() {
           <button class="btn secondary" type="button" @click="copyLink(player)">
             {{ copiedId === player.id ? 'Kopiert.' : 'Link kopieren' }}
           </button>
-          <button class="btn danger-text" type="button" :disabled="removing" @click="pendingRemoval = player">
+          <button class="btn danger-text" type="button" :disabled="removing || locked" @click="pendingRemoval = player">
             Entfernen
           </button>
         </div>

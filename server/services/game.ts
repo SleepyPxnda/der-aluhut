@@ -1,7 +1,5 @@
 import { DEFAULT_PHASE_ORDER, PHASE_CATALOG, type PhaseId } from '../../shared/phases'
-import type { GameSetup } from '../../shared/types'
 import { getDb } from '../utils/db'
-import { listPlayers } from './players'
 
 export function getPhaseOrder(): PhaseId[] {
   const db = getDb()
@@ -13,7 +11,19 @@ export function getPhaseOrder(): PhaseId[] {
   return [...DEFAULT_PHASE_ORDER]
 }
 
+export function getCurrentPosition(): number | null {
+  const row = getDb().prepare('SELECT current_step FROM game WHERE id = 1').get()
+  return (row?.current_step as number | null | undefined) ?? null
+}
+
+export function assertNotStarted(): void {
+  if (getCurrentPosition() !== null) {
+    throw createError({ statusCode: 409, statusMessage: 'Das Spiel läuft schon.' })
+  }
+}
+
 export function setPhaseOrder(order: string[]): PhaseId[] {
+  assertNotStarted()
   const known = new Set<string>(PHASE_CATALOG.map((phase) => phase.id))
   const valid =
     order.length > 0 && new Set(order).size === order.length && order.every((id) => known.has(id))
@@ -26,8 +36,4 @@ export function setPhaseOrder(order: string[]): PhaseId[] {
     )
     .run(JSON.stringify(order))
   return order as PhaseId[]
-}
-
-export function getGameSetup(): GameSetup {
-  return { players: listPlayers(), phaseOrder: getPhaseOrder(), catalog: [...PHASE_CATALOG] }
 }
