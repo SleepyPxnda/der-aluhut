@@ -1,9 +1,6 @@
-import { PHASE_CATALOG } from '../../../shared/phases'
-import type { GameSetup } from '../../../shared/types'
-import { getPhaseOrder } from '../../services/game'
-import { listPlayers } from '../../services/players'
+import { getGameSetup } from '../../services/game'
 
-export default defineEventHandler(async (event): Promise<GameSetup> => {
+export default defineEventHandler(async (event) => {
   await requireAdmin(event)
-  return { players: listPlayers(), phaseOrder: getPhaseOrder(), catalog: [...PHASE_CATALOG] }
+  return getGameSetup()
 })

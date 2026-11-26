@@ -7,29 +7,6 @@ interface FetchFailure {
   statusMessage?: string
 }
 
-function messageOf(failure: unknown): string {
-  const { data, statusMessage } = failure as FetchFailure
-  return data?.statusMessage ?? statusMessage ?? 'Etwas ist schiefgegangen. Versuch es nochmal.'
-}
-
-function useAction<Args extends unknown[], Result>(run: (...args: Args) => Promise<Result>) {
-  const pending = ref(false)
-  const error = ref<string | null>(null)
-  async function execute(...args: Args): Promise<Result | undefined> {
-    pending.value = true
-    error.value = null
-    try {
-      return await run(...args)
-    } catch (failure) {
-      error.value = messageOf(failure)
-      return undefined
-    } finally {
-      pending.value = false
-    }
-  }
-  return { pending, error, execute }
-}
-
 export function useAdmin() {
   const setup = ref<GameSetup | null>(null)
   const needsLogin = ref(false)
@@ -46,7 +23,7 @@ export function useAdmin() {
       if ((failure as FetchFailure).statusCode === 401) {
         needsLogin.value = true
       } else {
-        loadError.value = messageOf(failure)
+        loadError.value = errorMessageOf(failure)
       }
     } finally {
       loading.value = false

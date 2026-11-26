@@ -1,5 +1,7 @@
 import { DEFAULT_PHASE_ORDER, PHASE_CATALOG, type PhaseId } from '../../shared/phases'
+import type { GameSetup } from '../../shared/types'
 import { getDb } from '../utils/db'
+import { listPlayers } from './players'
 
 export function getPhaseOrder(): PhaseId[] {
   const db = getDb()
@@ -24,4 +26,8 @@ export function setPhaseOrder(order: string[]): PhaseId[] {
     )
     .run(JSON.stringify(order))
   return order as PhaseId[]
+}
+
+export function getGameSetup(): GameSetup {
+  return { players: listPlayers(), phaseOrder: getPhaseOrder(), catalog: [...PHASE_CATALOG] }
 }

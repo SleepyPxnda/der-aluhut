@@ -19,8 +19,15 @@ export function checkAdminPassword(input: string, configured: string | undefined
   }
 }
 
+export function sessionCookieOptions(protocol: string) {
+  return { secure: protocol === 'https', sameSite: 'lax' as const, httpOnly: true, path: '/' }
+}
+
 function openSession(event: H3Event) {
-  return useSession<SessionData>(event, { password: useRuntimeConfig(event).sessionPassword })
+  return useSession<SessionData>(event, {
+    password: useRuntimeConfig(event).sessionPassword,
+    cookie: sessionCookieOptions(getRequestProtocol(event)),
+  })
 }
 
 export async function loginAdmin(event: H3Event, password: string): Promise<void> {

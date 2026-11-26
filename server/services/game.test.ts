@@ -1,7 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { DEFAULT_PHASE_ORDER } from '../../shared/phases'
 import { getDb } from '../utils/db'
-import { getPhaseOrder, setPhaseOrder } from './game'
+import { PHASE_CATALOG } from '../../shared/phases'
+import { createPlayer } from './players'
+import { getGameSetup, getPhaseOrder, setPhaseOrder } from './game'
 
 function catchError(run: () => void): { statusCode: number; statusMessage: string } {
   try {
@@ -48,5 +50,17 @@ describe('setPhaseOrder', () => {
 
   it('lehnt eine doppelte ID mit 400 ab', () => {
     expect(catchError(() => setPhaseOrder(['lobby', 'lobby'])).statusCode).toBe(400)
+  })
+})
+
+describe('getGameSetup', () => {
+  it('liefert Spielende, Phasenfolge und Katalog', () => {
+    getDb().exec('DELETE FROM player')
+    const player = createPlayer('Jana')
+    expect(getGameSetup()).toEqual({
+      players: [player],
+      phaseOrder: DEFAULT_PHASE_ORDER,
+      catalog: [...PHASE_CATALOG],
+    })
   })
 })

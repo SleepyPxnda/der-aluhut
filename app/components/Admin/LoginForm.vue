@@ -6,7 +6,7 @@ const password = ref('')
 
 <template>
   <form @submit.prevent="emit('submit', password)">
-    <h1>Admin</h1>
+    <h1>Als Admin anmelden</h1>
     <label for="admin-password">Passwort</label>
     <input
       id="admin-password"
@@ -18,7 +18,7 @@ const password = ref('')
     >
     <p v-if="error" class="err" role="alert">{{ error }}</p>
     <button class="btn wide" type="submit" :disabled="pending">
-      {{ pending ? 'Prüfe …' : 'Anmelden' }}
+      {{ pending ? 'Anmelden …' : 'Anmelden' }}
     </button>
   </form>
 </template>

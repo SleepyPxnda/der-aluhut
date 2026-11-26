@@ -1,9 +1,8 @@
-import type { GameState } from '../../shared/types'
+import type { GameState, PublicPlayer } from '../../shared/types'
 
-export function useGame() {
-  const { data, pending, error, refresh } = useFetch<GameState>('/api/state', {
+export async function useGame() {
+  const { data, pending, error, refresh } = await useFetch<GameState>('/api/state', {
     key: 'game-state',
-    getCachedData: () => undefined,
   })
   const me = computed(() => data.value?.me ?? null)
   const errorMessage = computed(() => {
@@ -12,5 +11,9 @@ export function useGame() {
     }
     return (error.value.data as { statusMessage?: string } | undefined)?.statusMessage ?? 'Der Zustand konnte nicht geladen werden.'
   })
-  return { me, pending, errorMessage, refresh }
+  const join = useAction(async (token: string) => {
+    await $fetch<PublicPlayer>('/api/players/join', { method: 'POST', body: { token } })
+    await refresh()
+  })
+  return { me, pending, errorMessage, refresh, join }
 }

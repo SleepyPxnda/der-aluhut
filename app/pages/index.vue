@@ -1,47 +1,35 @@
 <script setup lang="ts">
-interface JoinFailure {
-  data?: { statusMessage?: string }
-  statusMessage?: string
-}
-
 const route = useRoute()
-const { me, pending, errorMessage, refresh } = useGame()
+const { me, pending, errorMessage, join } = await useGame()
 const token = typeof route.query.t === 'string' ? route.query.t : ''
-const joining = ref(token !== '')
-const joinError = ref<string | null>(null)
 
 if (!token && me.value) {
   await navigateTo('/play', { replace: true })
 }
 
-async function join() {
-  try {
-    await $fetch('/api/players/join', { method: 'POST', body: { token } })
-    await refresh()
+async function joinWithToken() {
+  await join.execute(token)
+  if (!join.error.value) {
     await navigateTo('/play', { replace: true })
-  } catch (failure) {
-    const { data, statusMessage } = failure as JoinFailure
-    joinError.value = data?.statusMessage ?? statusMessage ?? 'Die Anmeldung ist fehlgeschlagen.'
-    joining.value = false
   }
 }
 
 onMounted(() => {
   if (token) {
-    join()
-  } else if (me.value) {
-    navigateTo('/play', { replace: true })
+    joinWithToken()
   }
 })
 </script>
 
 <template>
-  <section class="panel">
-    <h1>Willkommen</h1>
-    <p v-if="joining" class="loading">Du wirst angemeldet …<span class="caret" /></p>
-    <p v-else-if="joinError" class="err" role="alert">{{ joinError }}</p>
-    <p v-else-if="pending" class="loading">Lädt …<span class="caret" /></p>
-    <p v-else-if="errorMessage" class="err" role="alert">{{ errorMessage }}</p>
-    <p v-else>Öffne den persönlichen Link, den du vom Admin bekommen hast.</p>
+  <section class="hero">
+    <span class="stamp" aria-hidden="true">STRENG GEHEIM</span>
+    <BrandAluhutHat class="bighat" />
+    <p class="wordmark">Der Aluhut<span>Vertrauliche Akte</span></p>
+    <p v-if="token && !join.error.value" class="say loading">Du wirst angemeldet …<span class="caret" /></p>
+    <p v-else-if="join.error.value" class="err say" role="alert">{{ join.error.value }}</p>
+    <p v-else-if="pending" class="say loading">Lädt …<span class="caret" /></p>
+    <p v-else-if="errorMessage" class="err say" role="alert">{{ errorMessage }}</p>
+    <p v-else class="say">Öffne den persönlichen Link, den du vom Admin bekommen hast.</p>
   </section>
 </template>

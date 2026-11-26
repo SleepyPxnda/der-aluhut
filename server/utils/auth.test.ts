@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { checkAdminPassword } from './auth'
+import { checkAdminPassword, sessionCookieOptions } from './auth'
 
 function catchError(run: () => void): { statusCode: number; statusMessage: string } {
   try {
@@ -29,5 +29,12 @@ describe('checkAdminPassword', () => {
 
   it('wirft 500 bei leerem Passwort, auch bei leerer Eingabe', () => {
     expect(catchError(() => checkAdminPassword('', '')).statusCode).toBe(500)
+  })
+})
+
+describe('sessionCookieOptions', () => {
+  it('setzt das Secure-Flag nur bei https', () => {
+    expect(sessionCookieOptions('https').secure).toBe(true)
+    expect(sessionCookieOptions('http').secure).toBe(false)
   })
 })

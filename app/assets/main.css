@@ -337,8 +337,21 @@ button:focus-visible {
 }
 
 .phase.off .ptext {
+  position: relative;
   color: var(--ink-soft);
-  text-decoration: line-through;
+}
+
+.phase.off .ptext::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -2px;
+  left: -2px;
+  height: 0.7em;
+  margin-top: -0.35em;
+  background: var(--redact);
+  opacity: 0.82;
+  transform: skewX(-6deg);
 }
 
 .plabel {
@@ -469,4 +482,114 @@ button:focus-visible {
 
 .dialog .inline .btn {
   flex: 1;
+}
+
+.page {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.hat {
+  flex: none;
+  width: 28px;
+  height: 24px;
+}
+
+.bighat {
+  width: 120px;
+  height: 100px;
+}
+
+.deco {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.deco .redact {
+  min-width: 4ch;
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.hero .raised {
+  position: relative;
+}
+
+.stamp {
+  position: absolute;
+  top: 28px;
+  right: 8px;
+  padding: 4px 10px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--red);
+  border: 4px double var(--red);
+  opacity: 0.85;
+  mix-blend-mode: multiply;
+  transform: rotate(12deg);
+  pointer-events: none;
+}
+
+.wordmark {
+  margin: 0;
+  font-family: var(--font-type);
+  font-size: 50px;
+  line-height: 0.95;
+  color: var(--ink);
+}
+
+.wordmark span {
+  display: block;
+  margin-top: 10px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.say {
+  max-width: 28ch;
+  margin: 0;
+  font-size: 18px;
+}
+
+.say strong {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--font-type);
+  font-size: 28px;
+  font-weight: 400;
+}
+
+.say.note {
+  padding: 12px;
+  background: var(--paper-hi);
+  border: 1px solid var(--line);
+}
+
+.thread {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
 }
