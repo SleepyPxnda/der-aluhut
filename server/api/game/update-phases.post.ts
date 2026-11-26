@@ -5,6 +5,6 @@ const bodySchema = z.object({ phaseOrder: z.array(z.string()) })
 
 export default defineEventHandler(async (event) => {
   await requireAdmin(event)
-  const { phaseOrder } = await readValidatedBody(event, bodySchema.parse)
+  const { phaseOrder } = await readValidatedBody(event, parseWith(bodySchema))
   return { phaseOrder: setPhaseOrder(phaseOrder) }
 })

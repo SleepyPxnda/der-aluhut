@@ -97,14 +97,14 @@ function confirmRemoval() {
     <p v-if="players.length === 0" class="empty">Noch niemand dabei. Füg die erste Person hinzu.</p>
     <ul v-else class="players">
       <li v-for="(player, index) in players" :key="player.id">
-        <span class="pname">
+        <span class="player-name">
           {{ player.name }}
           <span class="no" aria-hidden="true">Subjekt {{ String(index + 1).padStart(2, '0') }}</span>
         </span>
         <span class="link">
           {{ origin }}/?t=<span class="redact" aria-label="Token verborgen">{{ player.token }}</span>
         </span>
-        <div class="pactions">
+        <div class="player-actions">
           <button class="btn secondary" type="button" @click="copyLink(player)">
             {{ copiedId === player.id ? 'Kopiert.' : 'Link kopieren' }}
           </button>

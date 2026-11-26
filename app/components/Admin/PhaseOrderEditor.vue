@@ -69,8 +69,8 @@ watch(
           <input type="checkbox" :checked="item.active" :aria-label="`${item.label} aktiv`" @change="toggle(item)">
           <span class="track" aria-hidden="true"><span class="knob" /></span>
         </label>
-        <span class="plabel">
-          <span class="ptext">{{ item.label }}</span>
+        <span class="phase-label">
+          <span class="phase-text">{{ item.label }}</span>
           <span v-if="item.active && item.id === firstActive" class="mark">Start</span>
           <span v-if="item.active && item.id === lastActive" class="mark end">Ende</span>
         </span>
@@ -88,7 +88,7 @@ watch(
     </ol>
     <p v-if="nothingActive" class="hint">Wähl mindestens eine Phase aus.</p>
     <p v-if="error" class="err" role="alert">{{ error }}</p>
-    <p v-if="saved && !error" class="okmsg" role="status">Gespeichert.</p>
+    <p v-if="saved && !error" class="ok-message" role="status">Gespeichert.</p>
     <button class="btn wide" type="button" :disabled="nothingActive || pending" @click="save">
       {{ pending ? 'Speichert …' : 'Speichern' }}
     </button>

@@ -23,9 +23,21 @@ export function sessionCookieOptions(protocol: string) {
   return { secure: protocol === 'https', sameSite: 'lax' as const, httpOnly: true, path: '/' }
 }
 
+const MIN_SESSION_PASSWORD_LENGTH = 32
+
+export function assertSessionPassword(configured: string | undefined): string {
+  if (!configured || configured.length < MIN_SESSION_PASSWORD_LENGTH) {
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Das Session-Passwort fehlt oder ist kürzer als 32 Zeichen.',
+    })
+  }
+  return configured
+}
+
 function openSession(event: H3Event) {
   return useSession<SessionData>(event, {
-    password: useRuntimeConfig(event).sessionPassword,
+    password: assertSessionPassword(useRuntimeConfig(event).sessionPassword),
     cookie: sessionCookieOptions(getRequestProtocol(event)),
   })
 }

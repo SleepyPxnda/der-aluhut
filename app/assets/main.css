@@ -201,7 +201,7 @@ button:focus-visible {
   border: 2px solid var(--red);
 }
 
-.okmsg {
+.ok-message {
   align-self: flex-start;
   padding: 6px 12px;
   font-family: var(--font-type);
@@ -273,7 +273,7 @@ button:focus-visible {
   border-top: 0;
 }
 
-.pname {
+.player-name {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -281,7 +281,7 @@ button:focus-visible {
   font-size: 19px;
 }
 
-.pname .no {
+.player-name .no {
   font-family: var(--font-body);
   font-size: 12px;
   letter-spacing: 0.08em;
@@ -308,8 +308,9 @@ button:focus-visible {
   transform: skewX(-4deg);
 }
 
-.pactions {
+.player-actions {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: 8px;
 }
@@ -320,7 +321,7 @@ button:focus-visible {
 
 .phase {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: 8px;
   padding: 6px;
@@ -336,12 +337,12 @@ button:focus-visible {
   border-left-color: #c9bb98;
 }
 
-.phase.off .ptext {
+.phase.off .phase-text {
   position: relative;
   color: var(--ink-soft);
 }
 
-.phase.off .ptext::after {
+.phase.off .phase-text::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -354,8 +355,10 @@ button:focus-visible {
   transform: skewX(-6deg);
 }
 
-.plabel {
+.phase-label {
   display: flex;
+  min-width: 0;
+  overflow-wrap: anywhere;
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
@@ -384,6 +387,7 @@ button:focus-visible {
 
 .moves {
   display: flex;
+  flex: none;
   gap: 4px;
 }
 

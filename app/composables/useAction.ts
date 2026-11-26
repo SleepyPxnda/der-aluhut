@@ -1,11 +1,11 @@
 interface FetchFailure {
-  data?: { statusMessage?: string }
+  data?: { statusMessage?: string; data?: { statusMessage?: string } }
   statusMessage?: string
 }
 
 export function errorMessageOf(failure: unknown): string {
   const { data, statusMessage } = failure as FetchFailure
-  return data?.statusMessage ?? statusMessage ?? 'Etwas ist schiefgegangen. Versuch es nochmal.'
+  return data?.data?.statusMessage ?? data?.statusMessage ?? statusMessage ?? 'Etwas ist schiefgegangen. Versuch es nochmal.'
 }
 
 export function useAction<Args extends unknown[], Result>(run: (...args: Args) => Promise<Result>) {

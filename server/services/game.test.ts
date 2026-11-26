@@ -11,7 +11,7 @@ function catchError(run: () => void): { statusCode: number; statusMessage: strin
   } catch (error) {
     return error as { statusCode: number; statusMessage: string }
   }
-  throw new Error('Kein Fehler geworfen')
+  throw new Error('No error thrown')
 }
 
 beforeEach(() => {
@@ -19,42 +19,42 @@ beforeEach(() => {
 })
 
 describe('getPhaseOrder', () => {
-  it('liefert beim ersten Zugriff die Standardfolge', () => {
+  it('returns the default order on first access', () => {
     expect(getPhaseOrder()).toEqual(DEFAULT_PHASE_ORDER)
     expect(getPhaseOrder()).toEqual([
       'lobby',
-      'vorbereitung',
-      'praesentation',
-      'befragung',
-      'auswertung',
-      'abschluss',
+      'preparation',
+      'presentation',
+      'survey',
+      'evaluation',
+      'closing',
     ])
   })
 })
 
 describe('setPhaseOrder', () => {
-  it('gibt die gespeicherte Folge so zurück', () => {
-    setPhaseOrder(['befragung', 'lobby'])
-    expect(getPhaseOrder()).toEqual(['befragung', 'lobby'])
+  it('returns the saved order unchanged', () => {
+    setPhaseOrder(['survey', 'lobby'])
+    expect(getPhaseOrder()).toEqual(['survey', 'lobby'])
   })
 
-  it('lehnt eine leere Liste mit 400 ab', () => {
+  it('rejects an empty list with 400', () => {
     const error = catchError(() => setPhaseOrder([]))
     expect(error.statusCode).toBe(400)
     expect(error.statusMessage).toBe('Ungültige Phasenfolge.')
   })
 
-  it('lehnt eine unbekannte ID mit 400 ab', () => {
-    expect(catchError(() => setPhaseOrder(['lobby', 'unbekannt'])).statusCode).toBe(400)
+  it('rejects an unknown id with 400', () => {
+    expect(catchError(() => setPhaseOrder(['lobby', 'unknown'])).statusCode).toBe(400)
   })
 
-  it('lehnt eine doppelte ID mit 400 ab', () => {
+  it('rejects a duplicate id with 400', () => {
     expect(catchError(() => setPhaseOrder(['lobby', 'lobby'])).statusCode).toBe(400)
   })
 })
 
 describe('getGameSetup', () => {
-  it('liefert Spielende, Phasenfolge und Katalog', () => {
+  it('returns players, phase order and catalog', () => {
     getDb().exec('DELETE FROM player')
     const player = createPlayer('Jana')
     expect(getGameSetup()).toEqual({

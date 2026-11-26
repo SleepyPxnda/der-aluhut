@@ -1,10 +1,10 @@
 export const PHASE_CATALOG = [
   { id: 'lobby', label: 'Lobby' },
-  { id: 'vorbereitung', label: 'Vorbereitung' },
-  { id: 'praesentation', label: 'Präsentation' },
-  { id: 'befragung', label: 'Befragung' },
-  { id: 'auswertung', label: 'Auswertung' },
-  { id: 'abschluss', label: 'Abschluss' },
+  { id: 'preparation', label: 'Vorbereitung' },
+  { id: 'presentation', label: 'Präsentation' },
+  { id: 'survey', label: 'Befragung' },
+  { id: 'evaluation', label: 'Auswertung' },
+  { id: 'closing', label: 'Abschluss' },
 ] as const
 
 export type PhaseId = (typeof PHASE_CATALOG)[number]['id']
