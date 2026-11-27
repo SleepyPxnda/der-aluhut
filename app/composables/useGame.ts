@@ -7,7 +7,7 @@ let source: EventSource | undefined
 let users = 0
 
 function reloadState() {
-  return refreshNuxtData(STATE_KEY)
+  return refreshNuxtData()
 }
 
 function openConnection(connectionLost: Ref<boolean>) {

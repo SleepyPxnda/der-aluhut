@@ -28,3 +28,22 @@ export interface GameState {
   me: PublicPlayer | null
   step: CurrentStep | null
 }
+
+export interface UploadInfo {
+  name: string
+  size: number
+}
+
+export interface MyPreparation {
+  theory: string
+  words: string[]
+  upload: UploadInfo | null
+  speech: string | null
+}
+
+export interface PreparationOverviewEntry {
+  id: string
+  name: string
+  upload: UploadInfo | null
+  hasSpeech: boolean
+}

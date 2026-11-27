@@ -581,3 +581,198 @@ input:disabled {
 .conn .caret {
   background: var(--red);
 }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.prep {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  text-align: left;
+}
+
+.prep-title {
+  margin: 0;
+  font-family: var(--font-type);
+  font-weight: 400;
+  font-size: 28px;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.theory {
+  font-family: var(--font-type);
+  font-size: 19px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.words {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: word;
+}
+
+.words li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 10px;
+  font-family: var(--font-type);
+  font-size: 20px;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  background: #fffaf0;
+  border: 1px solid var(--line);
+  border-left: 6px solid var(--red);
+  counter-increment: word;
+}
+
+.words li::before {
+  flex: none;
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  content: "0" counter(word);
+}
+
+.secret {
+  padding: 8px 10px;
+  font-size: 15px;
+  font-weight: 700;
+  border: 2px solid var(--ink);
+  border-left-width: 6px;
+}
+
+.file-status {
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.file-status.has {
+  font-weight: 700;
+}
+
+.pick {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pick-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 16px;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  cursor: pointer;
+  border: 2px solid var(--ink);
+  border-radius: 3px;
+  box-shadow: 2px 2px 0 var(--manila-dk);
+}
+
+.pick-label:focus-within {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.pick.disabled .pick-label {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.pick-name {
+  font-size: 14px;
+  color: var(--ink-soft);
+  overflow-wrap: anywhere;
+}
+
+textarea {
+  display: block;
+  width: 100%;
+  min-height: 140px;
+  padding: 10px 12px;
+  font: inherit;
+  font-size: 16px;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.55);
+  border: 0;
+  border-bottom: 2px solid var(--ink);
+  border-radius: 0;
+  resize: vertical;
+}
+
+textarea.invalid {
+  background: var(--red-bg);
+  border-bottom-color: var(--red);
+}
+
+textarea:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.prep-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.file-line {
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+
+.file-line.none {
+  color: var(--ink-soft);
+}
+
+.speech-flag {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.speech-flag.no {
+  font-weight: 400;
+  color: var(--ink-soft);
+}
+
+.counter {
+  font-family: var(--font-type);
+  font-size: 18px;
+}
+
+a.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
