@@ -1,5 +1,6 @@
 import { createHash, timingSafeEqual } from 'node:crypto'
 import type { H3Event } from 'h3'
+import { getPublicPlayer } from '../services/players'
 
 interface SessionData {
   admin?: true
@@ -63,4 +64,12 @@ export async function setSessionPlayer(event: H3Event, playerId: string): Promis
 export async function getSessionPlayerId(event: H3Event): Promise<string | null> {
   const session = await openSession(event)
   return session.data.playerId ?? null
+}
+
+export async function requirePlayer(event: H3Event): Promise<string> {
+  const playerId = await getSessionPlayerId(event)
+  if (!playerId || !getPublicPlayer(playerId)) {
+    throw createError({ statusCode: 401, statusMessage: 'Öffne zuerst deinen persönlichen Link.' })
+  }
+  return playerId
 }

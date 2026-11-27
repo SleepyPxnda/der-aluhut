@@ -29,6 +29,19 @@ export function getDb(): DatabaseSync {
       phase_id TEXT NOT NULL,
       speaker_id TEXT
     );
+    CREATE TABLE IF NOT EXISTS assignment (
+      player_id TEXT PRIMARY KEY,
+      theory TEXT NOT NULL,
+      words TEXT NOT NULL,
+      speech TEXT
+    );
+    CREATE TABLE IF NOT EXISTS upload (
+      player_id TEXT PRIMARY KEY,
+      path TEXT NOT NULL,
+      name TEXT NOT NULL,
+      size INTEGER NOT NULL,
+      uploaded_at TEXT NOT NULL
+    );
   `)
   const columns = database.prepare('PRAGMA table_info(game)').all()
   if (!columns.some((column) => column.name === 'current_step')) {
