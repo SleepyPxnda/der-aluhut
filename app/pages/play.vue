@@ -1,5 +1,9 @@
 <script setup lang="ts">
-const { me, pending, errorMessage, refresh } = await useGame()
+import { clientPhases } from '~/phases/registry'
+
+const { me, step, pending, errorMessage, connectionLost, refresh } = await useGame()
+
+const PlayerView = computed(() => (step.value ? (clientPhases[step.value.phaseId]?.PlayerView ?? null) : null))
 
 if (!pending.value && !errorMessage.value && !me.value) {
   await navigateTo('/', { replace: true })
@@ -8,7 +12,10 @@ if (!pending.value && !errorMessage.value && !me.value) {
 
 <template>
   <div class="page">
-  <BrandAppBar title="Der Aluhut" :tag="me?.name ?? '…'" />
+  <div class="top">
+    <BrandAppBar title="Der Aluhut" :tag="me?.name ?? '…'" />
+    <GameConnectionHint v-if="connectionLost" />
+  </div>
   <section class="hero">
     <svg class="thread" viewBox="0 0 360 500" preserveAspectRatio="none" aria-hidden="true">
       <path d="M30 40 L180 150 L330 70 M180 150 L60 420 M180 150 L310 400" stroke="#c4302a" stroke-width="2" fill="none" opacity=".55" />
@@ -22,6 +29,10 @@ if (!pending.value && !errorMessage.value && !me.value) {
     <template v-else-if="errorMessage">
       <p class="err say raised" role="alert">{{ errorMessage }}</p>
       <button class="btn secondary raised" type="button" @click="refresh()">Nochmal versuchen</button>
+    </template>
+    <template v-else-if="me && step">
+      <component :is="PlayerView" v-if="PlayerView" />
+      <GamePhaseFallback v-else />
     </template>
     <template v-else-if="me">
       <p class="say note raised"><strong>Hallo, {{ me.name }}!</strong>Warte, bis das Spiel startet.</p>

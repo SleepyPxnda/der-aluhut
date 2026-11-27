@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { DEFAULT_PHASE_ORDER } from '../../shared/phases'
 import { getDb } from '../utils/db'
-import { PHASE_CATALOG } from '../../shared/phases'
 import { createPlayer } from './players'
-import { getGameSetup, getPhaseOrder, setPhaseOrder } from './game'
+import { getPhaseOrder, setPhaseOrder } from './game'
+import { startGame } from './steps'
 
 function catchError(run: () => void): { statusCode: number; statusMessage: string } {
   try {
@@ -16,6 +16,7 @@ function catchError(run: () => void): { statusCode: number; statusMessage: strin
 
 beforeEach(() => {
   getDb().exec('DELETE FROM game')
+  getDb().exec('DELETE FROM step')
 })
 
 describe('getPhaseOrder', () => {
@@ -53,14 +54,13 @@ describe('setPhaseOrder', () => {
   })
 })
 
-describe('getGameSetup', () => {
-  it('returns players, phase order and catalog', () => {
+describe('setPhaseOrder when the game runs', () => {
+  it('rejects with 409', () => {
     getDb().exec('DELETE FROM player')
-    const player = createPlayer('Jana')
-    expect(getGameSetup()).toEqual({
-      players: [player],
-      phaseOrder: DEFAULT_PHASE_ORDER,
-      catalog: [...PHASE_CATALOG],
-    })
+    createPlayer('Jana')
+    startGame()
+    const error = catchError(() => setPhaseOrder(['lobby']))
+    expect(error.statusCode).toBe(409)
+    expect(error.statusMessage).toBe('Das Spiel läuft schon.')
   })
 })

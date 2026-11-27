@@ -1,6 +1,7 @@
 import { randomBytes, randomUUID } from 'node:crypto'
 import type { AdminPlayer, PublicPlayer } from '../../shared/types'
 import { getDb } from '../utils/db'
+import { assertNotStarted } from './game'
 
 const MAX_NAME_LENGTH = 30
 
@@ -11,6 +12,7 @@ export function listPlayers(): AdminPlayer[] {
 }
 
 export function createPlayer(rawName: string): AdminPlayer {
+  assertNotStarted()
   const name = rawName.trim()
   if (name.length < 1 || name.length > MAX_NAME_LENGTH) {
     throw createError({ statusCode: 400, statusMessage: 'Der Name muss 1 bis 30 Zeichen haben.' })
@@ -35,6 +37,7 @@ export function createPlayer(rawName: string): AdminPlayer {
 }
 
 export function deletePlayer(id: string): void {
+  assertNotStarted()
   getDb().prepare('DELETE FROM player WHERE id = ?').run(id)
 }
 

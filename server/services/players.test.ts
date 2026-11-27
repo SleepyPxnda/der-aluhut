@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { getDb } from '../utils/db'
+import { startGame } from './steps'
 import {
   createPlayer,
   deletePlayer,
@@ -18,6 +19,8 @@ function catchError(run: () => void): { statusCode: number; statusMessage: strin
 }
 
 beforeEach(() => {
+  getDb().exec('DELETE FROM game')
+  getDb().exec('DELETE FROM step')
   getDb().exec('DELETE FROM player')
 })
 
@@ -77,5 +80,18 @@ describe('getPublicPlayer', () => {
     const player = createPlayer('Jana')
     deletePlayer(player.id)
     expect(getPublicPlayer(player.id)).toBeNull()
+  })
+})
+
+describe('when the game runs', () => {
+  it('rejects createPlayer and deletePlayer with 409', () => {
+    const player = createPlayer('Jana')
+    startGame()
+    const created = catchError(() => createPlayer('Mehmet'))
+    const deleted = catchError(() => deletePlayer(player.id))
+    expect(created.statusCode).toBe(409)
+    expect(created.statusMessage).toBe('Das Spiel läuft schon.')
+    expect(deleted.statusCode).toBe(409)
+    expect(listPlayers()).toHaveLength(1)
   })
 })
