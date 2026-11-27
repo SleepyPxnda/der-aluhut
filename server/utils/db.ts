@@ -16,7 +16,6 @@ export function getDb(): DatabaseSync {
   database.exec(`
     CREATE TABLE IF NOT EXISTS game (
       id INTEGER PRIMARY KEY CHECK (id = 1),
-      phase_order TEXT NOT NULL,
       current_step INTEGER
     );
     CREATE TABLE IF NOT EXISTS player (
@@ -34,6 +33,9 @@ export function getDb(): DatabaseSync {
   const columns = database.prepare('PRAGMA table_info(game)').all()
   if (!columns.some((column) => column.name === 'current_step')) {
     database.exec('ALTER TABLE game ADD COLUMN current_step INTEGER')
+  }
+  if (columns.some((column) => column.name === 'phase_order')) {
+    database.exec('ALTER TABLE game DROP COLUMN phase_order')
   }
   return database
 }

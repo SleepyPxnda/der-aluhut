@@ -1,4 +1,3 @@
-import type { PhaseId } from '../../shared/phases'
 import type { AdminPlayer, GameProgress, GameSetup } from '../../shared/types'
 
 interface FetchFailure {
@@ -48,16 +47,6 @@ export function useAdmin() {
     }
   })
 
-  const savePhases = useAction(async (phaseOrder: PhaseId[]) => {
-    const saved = await $fetch<{ phaseOrder: PhaseId[] }>('/api/game/update-phases', {
-      method: 'POST',
-      body: { phaseOrder },
-    })
-    if (setup.value) {
-      setup.value.phaseOrder = saved.phaseOrder
-    }
-  })
-
   async function reloadAfterConflict(failure: unknown) {
     if ((failure as FetchFailure).statusCode === 409) {
       await $fetch<GameSetup>('/api/game/setup').then(
@@ -103,7 +92,6 @@ export function useAdmin() {
     login,
     addPlayer,
     removePlayer,
-    savePhases,
     startGame,
     advance,
   }

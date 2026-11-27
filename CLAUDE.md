@@ -8,7 +8,7 @@ Partyspiel über Verschwörungstheorien als mobile-first Website. Jede Person be
 - Mobile first: Jede Spieler-Ansicht ist ab 360 px Breite vollständig bedienbar.
 - Nur der Admin wechselt Phasen; alle Clients folgen live.
 - Phasen sind Module: neue Phase = neuer Ordner + Registry-Eintrag, kein Umbau am Kern.
-- Start, Ende und Phasenfolge sind pro Spiel konfigurierbar.
+- Start, Ende und Phasenfolge legt der Phasen-Katalog `shared/phases.ts` fest; im UI sind sie nicht änderbar.
 - Der Server ist die Wahrheit: Zuweisungen, Timer und Auswertung entstehen serverseitig, nie im Client.
 
 ## Architecture

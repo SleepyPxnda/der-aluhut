@@ -21,7 +21,6 @@ export interface GameProgress {
 
 export interface GameSetup extends GameProgress {
   players: AdminPlayer[]
-  phaseOrder: PhaseId[]
   catalog: PhaseInfo[]
 }
 

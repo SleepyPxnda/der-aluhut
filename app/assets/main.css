@@ -321,38 +321,13 @@ button:focus-visible {
 
 .phase {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
   gap: 8px;
   padding: 6px;
   background: #fffaf0;
   border: 1px solid var(--line);
   border-left: 6px solid var(--manila-dk);
-}
-
-.phase.off {
-  background: transparent;
-  border-style: dashed;
-  border-left-style: solid;
-  border-left-color: #c9bb98;
-}
-
-.phase.off .phase-text {
-  position: relative;
-  color: var(--ink-soft);
-}
-
-.phase.off .phase-text::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: -2px;
-  left: -2px;
-  height: 0.7em;
-  margin-top: -0.35em;
-  background: var(--redact);
-  opacity: 0.82;
-  transform: skewX(-6deg);
 }
 
 .phase-label {
@@ -385,82 +360,11 @@ button:focus-visible {
   transform: rotate(4deg);
 }
 
-.moves {
-  display: flex;
-  flex: none;
-  gap: 4px;
-}
-
-.icon {
-  display: grid;
-  place-items: center;
-  width: 44px;
-  height: 44px;
-  padding: 0;
-  font: inherit;
-  font-size: 18px;
-  color: var(--ink);
-  background: var(--paper-hi);
-  border: 2px solid var(--ink);
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.icon[disabled] {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.switch {
-  position: relative;
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 52px;
-  height: 44px;
-  margin: 0;
-  cursor: pointer;
-}
-
-.switch input {
-  position: absolute;
-  inset: 0;
-  margin: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.track {
-  display: block;
-  width: 48px;
-  height: 28px;
-  padding: 2px;
-  background: #cfc3a3;
-  border: 2px solid var(--ink);
-  border-radius: 14px;
-}
-
-.knob {
-  display: block;
-  width: 20px;
-  height: 20px;
-  background: var(--paper-hi);
-  border: 2px solid var(--ink);
-  border-radius: 50%;
-  transition: transform 0.15s;
-}
-
-.switch input:checked + .track {
-  background: var(--ok);
-}
-
-.switch input:checked + .track .knob {
-  transform: translateX(20px);
-}
-
-.switch input:focus-visible + .track {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
+.mark.each {
+  color: var(--ink-soft);
+  border: 2px dashed var(--ink-soft);
+  letter-spacing: 0.08em;
+  transform: none;
 }
 
 .scrim {
@@ -601,10 +505,6 @@ button:focus-visible {
 input:disabled {
   opacity: 0.55;
   cursor: not-allowed;
-}
-
-.switch input:disabled + .track {
-  opacity: 0.45;
 }
 
 .step {

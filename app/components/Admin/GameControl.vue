@@ -39,7 +39,7 @@ function confirmStart() {
     </template>
     <template v-else>
       <p class="hint">
-        Gestartet wird mit der gespeicherten Phasenfolge. Die Reihenfolge der Sprechenden wird beim Start ausgelost.
+        Gestartet wird mit der festen Phasenfolge. Die Reihenfolge der Sprechenden wird beim Start ausgelost.
       </p>
       <p v-if="startError" class="err" role="alert">{{ startError }}</p>
       <button class="btn wide" type="button" :disabled="starting" @click="confirming = true">
@@ -48,7 +48,7 @@ function confirmStart() {
     </template>
     <div v-if="confirming" class="scrim">
       <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="start-question">
-        <p id="start-question"><strong>Spiel starten?</strong> Danach kannst du Spielende und Phasenfolge nicht mehr ändern.</p>
+        <p id="start-question"><strong>Spiel starten?</strong> Danach kannst du Spielende nicht mehr ändern.</p>
         <div class="inline">
           <button class="btn secondary" type="button" @click="confirming = false">Abbrechen</button>
           <button class="btn" type="button" @click="confirmStart">Starten</button>

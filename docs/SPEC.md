@@ -24,20 +24,20 @@
 
 ## Phasenfolge
 
-- Der Phasen-Editor zeigt in einem frischen Spiel Lobby, Vorbereitung, Präsentation, Befragung, Auswertung und Abschluss, alle aktiv. Jede Phase lässt sich per Schalter aktivieren oder deaktivieren und mit „Nach oben“ und „Nach unten“ verschieben. Die erste aktive Phase trägt die Marke „Start“, die letzte die Marke „Ende“; inaktive Phasen sind geschwärzt.
-- „Speichern“ speichert die aktiven Phasen in ihrer Reihenfolge und zeigt „Gespeichert.“ Nach Neuladen stehen die aktiven Phasen in dieser Reihenfolge vorn, die inaktiven dahinter in Katalogreihenfolge.
-- Ist keine Phase aktiv, ist „Speichern“ deaktiviert und der Editor zeigt „Wähl mindestens eine Phase aus.“ Der Server lehnt leere Listen, unbekannte und doppelte IDs mit 400 „Ungültige Phasenfolge.“ ab. Fachliche Regeln zur Folge gibt es nicht.
+- Die Phasenfolge ist fest: Lobby, Vorbereitung, Präsentation, Befragung, Auswertung, Abschluss, in der Reihenfolge des Phasen-Katalogs im Code. Der Admin kann sie nicht ändern; neue Phasen kommen nur im Code dazu.
+- Das Panel „Phasenfolge“ auf der Einrichtungsseite ist eine reine Übersicht ohne Bedienelemente. Lobby trägt die Marke „Start“, Abschluss die Marke „Ende“, Präsentation und Befragung die Marke „je Person“. Darunter steht „Präsentation und Befragung laufen für jede Person einmal, in der beim Start ausgelosten Reihenfolge.“ Das Panel sieht vor und nach dem Start gleich aus.
+- `GET /api/game/setup` liefert `players`, `catalog`, `steps` und `currentIndex`, keine Phasenfolge. Eine Route zum Ändern der Folge gibt es nicht.
 
 ## Spielablauf
 
-- Die Einrichtungsseite heißt „Spiel einrichten“ und zeigt über den anderen Panels das Panel „Spielablauf“ mit dem Hinweis „Gestartet wird mit der gespeicherten Phasenfolge. Die Reihenfolge der Sprechenden wird beim Start ausgelost.“ und dem Button „Spiel starten“. Der Button fragt nach: „Spiel starten? Danach kannst du Spielende und Phasenfolge nicht mehr ändern.“ mit „Abbrechen“ und „Starten“; währenddessen heißt er „Startet …“.
-- Beim Start erzeugt der Server die Schritte aus der gespeicherten Phasenfolge, der erste Schritt wird der aktuelle. Jede Phase wird ein Schritt. Phasen, die pro Person laufen (Präsentation, Befragung), bilden bei direkter Folge einen Block, der einmal je Person in der Sprechreihenfolge läuft. Beispiel: Lobby, Präsentation, Befragung, Auswertung mit der Reihenfolge Ben, Anna ergibt Lobby, Präsentation · Ben, Befragung · Ben, Präsentation · Anna, Befragung · Anna, Auswertung.
+- Die Einrichtungsseite heißt „Spiel einrichten“ und zeigt über den anderen Panels das Panel „Spielablauf“ mit dem Hinweis „Gestartet wird mit der festen Phasenfolge. Die Reihenfolge der Sprechenden wird beim Start ausgelost.“ und dem Button „Spiel starten“. Der Button fragt nach: „Spiel starten? Danach kannst du Spielende nicht mehr ändern.“ mit „Abbrechen“ und „Starten“; währenddessen heißt er „Startet …“.
+- Beim Start erzeugt der Server die Schritte aus der festen Phasenfolge, der erste Schritt wird der aktuelle. Jede Phase wird ein Schritt. Phasen, die pro Person laufen (Präsentation, Befragung), bilden bei direkter Folge einen Block, der einmal je Person in der Sprechreihenfolge läuft. Beispiel: Lobby, Präsentation, Befragung, Auswertung mit der Reihenfolge Ben, Anna ergibt Lobby, Präsentation · Ben, Befragung · Ben, Präsentation · Anna, Befragung · Anna, Auswertung.
 - Die Sprechreihenfolge lost der Server beim Start zufällig aus allen Spielenden aus. Sie wird mit den Schritten gespeichert und bleibt nach Neuladen und Serverneustart gleich.
 - Ohne Spielende lehnt der Server den Start mit 400 „Leg zuerst mindestens eine Person an.“ ab, bei laufendem Spiel mit 409 „Das Spiel läuft schon.“ Die Meldung steht am Button.
 - Läuft das Spiel, heißt die Einrichtungsseite wie der aktuelle Schritt („<Phase>“ bzw. „<Phase> · <Name>“). Das Panel zeigt „Schritt <n> von <m>“, den aktuellen Schritt, „Als Nächstes: <Schritt>“ und den Button „Weiter“ („Schaltet weiter …“ während der Anfrage). Am letzten Schritt steht „Das ist der letzte Schritt.“ und „Weiter“ ist deaktiviert. Hat die aktuelle Phase eine Admin-Ansicht, steht sie unter dem Panel. Der Stand bleibt nach Neuladen und Serverneustart erhalten.
 - „Weiter“ sendet die Position, von der aus weitergeschaltet wird. Stimmt sie nicht mehr, antwortet der Server mit 409 „Jemand hat schon weitergeschaltet.“ und ändert nichts, am letzten Schritt mit 409 „Das ist schon der letzte Schritt.“ Das Panel lädt nach einem Konflikt den aktuellen Stand; die Meldung bleibt am Button, bis zum nächsten Tipp auf „Weiter“. Zurückschalten gibt es nicht.
 - Start und Weiter ohne Admin-Session antworten mit 401 „Bitte melde dich als Admin an.“
-- Sobald das Spiel läuft, steht über den Panels für Spielende und Phasenfolge „Das Spiel läuft. Spielende und Phasenfolge sind gesperrt.“ Namensfeld, „Hinzufügen“, „Entfernen“, Schalter, Pfeile und „Speichern“ sind deaktiviert; der Server lehnt Spielende anlegen, Spielende entfernen und Phasenfolge speichern mit 409 „Das Spiel läuft schon.“ ab. Join-Links und „Link kopieren“ funktionieren weiter.
+- Sobald das Spiel läuft, steht über der Liste der Spielenden „Das Spiel läuft. Spielende sind gesperrt.“ Namensfeld, „Hinzufügen“ und „Entfernen“ sind deaktiviert; der Server lehnt Spielende anlegen und Spielende entfernen mit 409 „Das Spiel läuft schon.“ ab. Join-Links und „Link kopieren“ funktionieren weiter.
 - Wird ein Schritt aktuell, ruft der Server genau einmal den `enter`-Hook der Phase aus der Server-Registry auf, falls es einen gibt, und sendet danach das Live-Signal.
 
 ## Live-Ansicht
@@ -48,5 +48,5 @@
 
 ## Zustände und Bedienung
 
-- Die Einrichtungsseite zeigt beim Laden „Lädt …“, bei einem Fehler die Meldung des Servers mit „Nochmal versuchen“. Während Login, Hinzufügen, Entfernen, Speichern, Start und Weiter ist der jeweilige Button deaktiviert; Fehler stehen an der Aktion.
-- Login, Einrichtung, Startseite, `/play` und alle Ansichten des Spielablaufs sind ab 360 px ohne horizontales Scrollen bedienbar; alle Buttons und Schalter sind mindestens 44 px hoch.
+- Die Einrichtungsseite zeigt beim Laden „Lädt …“, bei einem Fehler die Meldung des Servers mit „Nochmal versuchen“. Während Login, Hinzufügen, Entfernen, Start und Weiter ist der jeweilige Button deaktiviert; Fehler stehen an der Aktion.
+- Login, Einrichtung, Startseite, `/play` und alle Ansichten des Spielablaufs sind ab 360 px ohne horizontales Scrollen bedienbar; alle Buttons sind mindestens 44 px hoch.
