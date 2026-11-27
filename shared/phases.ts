@@ -15,7 +15,7 @@ export interface PhaseInfo {
   perSpeaker?: true
 }
 
-export const DEFAULT_PHASE_ORDER: PhaseId[] = PHASE_CATALOG.map((phase) => phase.id)
+export const PHASE_ORDER: PhaseId[] = PHASE_CATALOG.map((phase) => phase.id)
 
 const PHASES: readonly PhaseInfo[] = PHASE_CATALOG
 

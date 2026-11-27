@@ -2,7 +2,7 @@
 import { stepLabel } from '../../../shared/phases'
 import { clientPhases } from '~/phases/registry'
 
-const { setup, needsLogin, loading, loadError, load, login, addPlayer, removePlayer, savePhases, startGame, advance } =
+const { setup, needsLogin, loading, loadError, load, login, addPlayer, removePlayer, startGame, advance } =
   useAdmin()
 
 const currentStep = computed(() => {
@@ -48,7 +48,7 @@ onMounted(load)
           @advance="advance.execute"
         />
         <component :is="AdminView" v-if="AdminView" />
-        <p v-if="started" class="lock">Das Spiel läuft. Spielende und Phasenfolge sind gesperrt.</p>
+        <p v-if="started" class="lock">Das Spiel läuft. Spielende sind gesperrt.</p>
         <AdminPlayerList
           :locked="started"
           :players="setup.players"
@@ -59,14 +59,7 @@ onMounted(load)
           @add="addPlayer.execute"
           @remove="removePlayer.execute"
         />
-        <AdminPhaseOrderEditor
-          :locked="started"
-          :phase-order="setup.phaseOrder"
-          :catalog="setup.catalog"
-          :pending="savePhases.pending.value"
-          :error="savePhases.error.value"
-          @save="savePhases.execute"
-        />
+        <AdminPhaseOverview :catalog="setup.catalog" />
       </template>
     </div>
   </div>

@@ -95,6 +95,22 @@ describe('startGame', () => {
     expect(getGameSetup().steps).toEqual(first)
   })
 
+  it('builds the steps from the fixed phase order', () => {
+    createPlayer('Anna')
+    createPlayer('Ben')
+    startGame(() => 0)
+    expect(getGameSetup().steps.map((step) => [step.phaseId, step.speaker?.name ?? null])).toEqual([
+      ['lobby', null],
+      ['preparation', null],
+      ['presentation', 'Ben'],
+      ['survey', 'Ben'],
+      ['presentation', 'Anna'],
+      ['survey', 'Anna'],
+      ['evaluation', null],
+      ['closing', null],
+    ])
+  })
+
   it('makes the first step current', () => {
     createPlayer('Anna')
     startGame()
@@ -199,11 +215,12 @@ describe('getCurrentStep', () => {
 })
 
 describe('getGameSetup', () => {
-  it('returns players, phase order, catalog and empty progress before the start', () => {
+  it('returns players, catalog and empty progress before the start', () => {
     const player = createPlayer('Jana')
     const setup = getGameSetup()
     expect(setup.players).toEqual([player])
     expect(setup.catalog).toEqual([...PHASE_CATALOG])
+    expect(setup).not.toHaveProperty('phaseOrder')
     expect(setup.steps).toEqual([])
     expect(setup.currentIndex).toBeNull()
   })

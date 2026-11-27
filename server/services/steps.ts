@@ -1,9 +1,9 @@
-import { PHASE_CATALOG, isPerSpeaker, type PhaseId } from '../../shared/phases'
+import { PHASE_CATALOG, PHASE_ORDER, isPerSpeaker, type PhaseId } from '../../shared/phases'
 import type { CurrentStep, GameProgress, GameSetup } from '../../shared/types'
 import { serverPhases } from '../phases/registry'
 import { getDb } from '../utils/db'
 import { broadcast } from '../utils/events'
-import { assertNotStarted, getCurrentPosition, getPhaseOrder } from './game'
+import { assertNotStarted, getCurrentPosition } from './game'
 import { getPublicPlayer, listPlayers } from './players'
 
 export interface PlannedStep {
@@ -75,7 +75,7 @@ export function startGame(random: () => number = Math.random): GameProgress {
     throw createError({ statusCode: 400, statusMessage: 'Leg zuerst mindestens eine Person an.' })
   }
   const planned = buildSteps(
-    getPhaseOrder(),
+    PHASE_ORDER,
     shuffle(
       players.map((player) => player.id),
       random,
@@ -86,6 +86,7 @@ export function startGame(random: () => number = Math.random): GameProgress {
   db.exec('BEGIN')
   try {
     db.exec('DELETE FROM step')
+    db.prepare('INSERT OR IGNORE INTO game (id) VALUES (1)').run()
     planned.forEach((step, position) => insert.run(position, step.phaseId, step.speakerId))
     db.prepare('UPDATE game SET current_step = 0 WHERE id = 1').run()
     db.exec('COMMIT')
@@ -129,7 +130,6 @@ export function getCurrentStep(): CurrentStep | null {
 export function getGameSetup(): GameSetup {
   return {
     players: listPlayers(),
-    phaseOrder: getPhaseOrder(),
     catalog: [...PHASE_CATALOG],
     ...getProgress(),
   }
